@@ -1,7 +1,7 @@
 # fitbit-stream-bridge
 A demonstration of sending real-time data between Fitbit OS and a LAN client.
 
-![Image](stream-bridge.mp4 "Preview")
+![Preview](stream-bridge.mp4 "Preview")
 
 A phone-based server is used to relay the data. This avoids the need to use `wss` (`https`), which can be difficult to set up on a LAN.
 
