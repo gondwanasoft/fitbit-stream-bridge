@@ -1,7 +1,7 @@
 # fitbit-stream-bridge
 A demonstration of sending real-time data between Fitbit OS and a LAN client.
 
-![Preview](stream-bridge.mp4 "Preview")
+![Preview](https://raw.githubusercontent.com/gondwanasoft/fitbit-stream-bridge/main/stream-bridge.mp4 "Preview")
 
 A phone-based server is used to relay the data. This avoids the need to use `wss` (`https`), which can be difficult to set up on a LAN.
 
@@ -19,21 +19,22 @@ Bidirectional communication is supported, so `client` can send messages to `fitb
 #### Fitbit
 * Download or clone the `fitbit` app’s files.
 * In `companion/index.js`, Verify that `SERVER_URL` is appropriate to your phone. (The default should be fine on Android.)
-* Build and install the `fitbit` app using the Fitbit development CLI. The app should run on a watch rather than the Fitbit Simulator since the latter doesn’t provide accelerometer data (although other data could be used).
+* Build the app (named `Stream Bridge`) using the Fitbit development CLI.
+* Install the app onto a watch (see *Issues* below for use with Simulator).
 #### Server
 Install [pydroid 3](https://play.google.com/store/apps/details?id=ru.iiec.pydroid3) or some other Python 3.5+ execution environment. For iOS, [Pythonista 3](http://omz-software.com/pythonista/index.html) might work (untested).
 
 In Python, install the `websockets` package; *eg*, `pip install websockets`.
 
 In `stream-bridge.py`, set constants appropriate to your network:
-* `FITBIT_HOST` should be appropriate to your phone.
-* `FITBIT_PORT` should match the port specified in `companion/index.js`’s `SERVER_URL`.
-* `COMPUTER_HOST` should be same IP specified in `client.html`’s `SERVER_URL`.
-* `COMPUTER_PORT` should be same port specified in `client.html`’s `SERVER_URL`.
+* `SERVER_LOCAL_HOST` should be appropriate to your phone.
+* `SERVER_LOCAL_PORT` should match the port specified in `companion/index.js`’s `SERVER_URL`.
+* `SERVER_LAN_HOST` should be same IP specified in `client.html`’s `SERVER_URL`.
+* `SERVER_LAN_PORT` should be same port specified in `client.html`’s `SERVER_URL`.
 
 #### Client
 
-In `client.html`, set `SERVER_URL` appropriate to your network. The host and port specified should match `COMPUTER_HOST` and `COMPUTER_PORT` in `stream-bridge.py`.
+In `client.html`, set `SERVER_URL` appropriate to your network. The host and port specified should match `SERVER_LAN_HOST` and `SERVER_LAN_PORT` in `stream-bridge.py`.
 
 ### Start-up
 * Using Python on your phone, run `stream-bridge.py`.
@@ -44,6 +45,7 @@ If everything is working, the vector displayed in `client.html` should animate a
 ## Issues
 * In this demonstration, binary messages are used for communication, because the watch-to-companion connection (in particular) can be slow. The `server` should forward messages without changing their content or format, so the use of text (string) messages should be possible. However, doing so will probably reduce the frequency with which messages can be transferred.
 * The Fitbit messaging API may not reopen a closed connection, and it does not provide a way to request that the connection be reopened. When a messaging connection is closed, the app may need to be restarted.
+* `stream-bridge.py` can be configured to run on the same computer as the Fitbit simulator. Be aware that the simulator doesn't simulate accelerometer data, so you’ll need to send other data.
 * The use of Fitbit messaging and websockets is not appropriate if the goal is to save data to a file. Those protocols are best suited to real-time streaming; messages will be dropped if necessary.
 * Fitbit’s accelerometer data includes gravity, so a reading of (0,0,0) would only be obtained if the watch were in free-fall.
 * If streaming data at a high frequency, don’t try to log output in the Fitbit CLI for every message: you’ll flood the dev bridge.

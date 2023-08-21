@@ -1,7 +1,7 @@
 import * as messaging from "messaging"
 
 const WEBSOCKET_STATES = ['CONNECTING', 'OPEN', 'CLOSING', 'CLOSED']
-const wsUri = "ws://127.0.0.1:8080"
+const SERVER_URL = "ws://127.0.0.1:8080"
 // 127.0.0.1 indicates the companion device, and is the only URL we can use without SSL (at least on Android).
 // 8080 is a port that's commonly used for WebSockets.
 let websocket
@@ -51,7 +51,7 @@ function openWebsocket() {
       websocket.close()
    }
 
-   websocket = new WebSocket(wsUri);
+   websocket = new WebSocket(SERVER_URL);
    websocket.binaryType = 'arraybuffer'
    websocket.addEventListener("open", onOpen);
    websocket.addEventListener("close", onClose);
@@ -96,19 +96,21 @@ function sendToServer(data) {
 
 //websocket.send('hello.')
 function onOpen(evt) {
-   console.log("CONNECTED");
+   console.log("CONNECTED")
 }
 
 function onClose() {
-   console.warn("websocket disconnected");
+   console.warn("websocket disconnected")
 }
 
 function onMessage(evt) {
-   console.log(`websocket rx: ${evt.data}`);
+   const view = new Float32Array(evt.data)
+   //console.log(`websocket rx: ${view[0]}`)
+   // We could use messaging to send data to watch.
 }
 
 function onError() {
-   console.error(`websocket error`);
+   console.error(`websocket error`)
 }
 
 // TODO 3.2 companion: if messaging peerSocket closes or errors, try to reopen it. Try import()

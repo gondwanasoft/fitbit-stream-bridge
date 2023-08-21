@@ -12,14 +12,14 @@ appbit.appTimeoutEnabled = false
 peerSocket.addEventListener("open", () => {
   console.log('peerSocket OPEN')
   // TODO 3.9 del sim test code
-  readingBufferView[0] = 0
+  /*readingBufferView[0] = 0
   readingBufferView[1] = 5
   readingBufferView[2] = 5
-  readingBufferView[3] = 5
+  readingBufferView[3] = 15
   setInterval(()=>{
-    //if (peerSocket.readyState === peerSocket.OPEN) peerSocket.send(readingBuffer); else console.warn(`peerSocket not open (${peerSocket.readyState})`)
-  }, 1000)
-  //console.log(`bufferedAmount=${peerSocket.bufferedAmount}`)  // 17: byteLength of buffer + 1
+    if (peerSocket.readyState === peerSocket.OPEN) peerSocket.send(readingBuffer); else console.warn(`peerSocket not open (${peerSocket.readyState})`)
+  }, 1000)*/
+  //console.log(`bufferedAmount=${peerSocket.bufferedAmount}`)  // 17: byteLength of buffer + 1. This proves(?) message is binary.
 })
 
 peerSocket.addEventListener("close", evt => {

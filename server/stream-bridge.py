@@ -3,11 +3,11 @@
 import asyncio
 import websockets
 
-FITBIT_HOST = "localhost"
-FITBIT_PORT = 8080
-#COMPUTER_HOST = "192.168.1.30"	# IP address when running on phone (for Fitbit watch connection)
-COMPUTER_HOST = "192.168.1.26"	# IP address when running on computer (for Fitbit sim connection)
-COMPUTER_PORT = 8081
+SERVER_LOCAL_HOST = "localhost"		# server's IP address for Fitbit connection
+SERVER_LOCAL_PORT = 8080					# server's port for Fitbit connection
+SERVER_LAN_HOST = "192.168.1.30"	# server's IP address for LAN connection (when running on phone for Fitbit watch connection)
+#SERVER_LAN_HOST = "192.168.1.26"	# server's IP address for LAN connection (when running on computer (for Fitbit sim connection)
+SERVER_LAN_PORT = 8081						# server's port for LAN connection
 
 server_tasks = set()
 websocket_fitbit = None
@@ -35,13 +35,13 @@ async def computer_handler(websocket):
 
 async def start_fitbit_server():
 	print("before starting fitbit_handler")
-	async with websockets.serve(fitbit_handler, FITBIT_HOST, FITBIT_PORT):
+	async with websockets.serve(fitbit_handler, SERVER_LOCAL_HOST, SERVER_LOCAL_PORT):
 		print("after starting fitbit_handler")
 		await asyncio.Future()
 
 async def start_computer_server():
 		print("before starting computer_handler")
-		async with websockets.serve(computer_handler, COMPUTER_HOST, COMPUTER_PORT):
+		async with websockets.serve(computer_handler, SERVER_LAN_HOST, SERVER_LAN_PORT):
 			print("after starting computer_handler")
 			await asyncio.Future()
 
@@ -54,5 +54,4 @@ async def start_servers():
 
 asyncio.run(start_servers())
 
-# TODO 3.3 test bidirectional
 # TODO 9 file transfer and fetch, rather than messaging and websocket. Save files.

@@ -18,8 +18,8 @@
       <line id='v' x1="460" y1="281" x2="600" y2="200" stroke="black" stroke-width="3"/>  <!-- vector from origin with components x,y,z -->
     </svg>
     <script>
-      const SERVER_TO_COMPUTER_URL = 'ws://192.168.1.30:8081' // phone
-      //const SERVER_TO_COMPUTER_URL = 'ws://192.168.1.26:8081' // computer
+      const SERVER_URL = 'ws://192.168.1.30:8081' // phone
+      //const SERVER_URL = 'ws://192.168.1.26:8081' // computer
 
       const xEl = document.getElementById('x')
       const yEl = document.getElementById('y')
@@ -45,7 +45,7 @@
       openConnection()
 
       function openConnection() {
-        connection = new WebSocket(SERVER_TO_COMPUTER_URL)
+        connection = new WebSocket(SERVER_URL)
         connection.onopen = onConnectionOpen
         connection.onmessage = onConnectionMessage
         connection.onclose = onConnectionClose
@@ -67,15 +67,19 @@
             y = view[2]
             z = view[3]
             drawVector(x, y, z)
+
+            // To test sending data from client to fitbit, copy z value into view[0] and return the array:
+            view[0] = z
+            connection.send(view)
           })
       }
 
       function onConnectionClose() {
-        console.error(`desktop: connection closed: check server is running at ${SERVER_TO_COMPUTER_URL}`)
+        console.error(`desktop: connection closed: check server is running at ${SERVER_URL}`)
       }
 
       function onConnectionError() {
-        console.error(`desktop: connection error: check server is running at ${SERVER_TO_COMPUTER_URL}`)
+        console.error(`desktop: connection error: check server is running at ${SERVER_URL}`)
       }
 
       function drawVector(x,y,z) {
