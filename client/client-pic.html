@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <body>
+    <svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" stroke="black" >
+      <image href="watch.png" height="647" width="647" />
+      <rect width="1000" height="1000" stroke-width="0" fill="white" fill-opacity="0.5"/>
+      <line x1="220" y1="312" x2="700" y2="250" />  <!-- x axis -->
+      <line x1="393" y1="0" x2="527" y2="562" />  <!-- y axis -->
+      <line x1="600" y1="200" x2="320" y2="362" />  <!-- z axis -->
+      <text x="680" y="270" stroke="red">x</text>
+      <text x="380" y="20" stroke="green">y</text>
+      <text x="590" y="220" stroke="blue">z</text>
+      <line id='x' x1="440" y1="281" x2="700" y2="250" stroke="red"/>  <!-- x component -->
+      <line id='y' x1="460" y1="281" x2="0" y2="0" stroke="green"/>  <!-- y component -->
+      <line id='z' x1="460" y1="281" x2="600" y2="200" stroke="blue"/>  <!-- z component -->
+      <line id='v' x1="460" y1="281" x2="600" y2="200" stroke="black" stroke-width="3"/>  <!-- vector from origin with components x,y,z -->
+    </svg>
+    <script src="client-stream.js"></script>  <!-- provides a stream Object for WebSocket communications -->
+	  <script src="client-pic.js" ></script>    <!-- uses data from the stream Object to update the displayed image -->
+  </body>
+</html>

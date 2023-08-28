@@ -5,7 +5,6 @@ const SERVER_URL = "ws://127.0.0.1:8080"
 // 127.0.0.1 indicates the companion device, and is the only URL we can use without SSL (at least on Android).
 // 8080 is a port that's commonly used for WebSockets.
 let websocket
-let dateStart = Date.now()
 
 openMessaging()
 
@@ -16,7 +15,7 @@ function openMessaging() {
 }
 
 function onWatchMessage(evt) {
-   // Unfortunately, the API unpacks the data into an Object rather than a binary array.
+   // Unfortunately, the Fitbit API unpacks the data into an Object rather than a binary array. We need to repack it.
    //console.log(`data type=${typeof evt.data} len=${evt.data.length} ${JSON.stringify(evt.data)}`)
    const values = Object.values(evt.data)
    //console.log(`${JSON.stringify(values)}`)
@@ -27,22 +26,18 @@ function onWatchMessage(evt) {
 
    // Send to server:
    if (websocket.readyState !== websocket.OPEN) {  // data will be dropped (ie, not sent)
-      console.warn(`Couldn't send to server: state=${WEBSOCKET_STATES[websocket.readyState]}`)
+      //console.warn(`Couldn't send to server: state=${WEBSOCKET_STATES[websocket.readyState]}`)
       if (websocket.readyState === websocket.CLOSED) openWebsocket()
       return
    }
    //console.log('sending')
    websocket.send(buffer)
-
-   //const view = new Float32Array(evt.data)
-   //console.log(`view=${view[0]}`)
-   //const blob = new Blob(data, {type: "application/octet-stream"})
-   //console.log(`blob.size=${blob.size}`)
-   //sendToServer(evt.data)
 }
 
 function openWebsocket() {
-   console.log('openWebsocket');
+   // Remove listeners from any previous WebSocket, instantiate a new one, and add listeners.
+   // Instantiating a new WebSocket causes it to try to open; there seems to be no way to get a pre-existing WebSocket to reopen.
+   //console.log('openWebsocket');
    if (websocket) {
       websocket.removeEventListener("open", onOpen);
       websocket.removeEventListener("close", onClose);
@@ -59,59 +54,23 @@ function openWebsocket() {
    websocket.addEventListener("error", onError);
 }
 
-function sendToServer(data) {
-   if (websocket.readyState !== websocket.OPEN) {  // data will be dropped (ie, not sent)
-      console.warn(`Couldn't send: state=${WEBSOCKET_STATES[websocket.readyState]}`)
-      if (websocket.readyState === websocket.CLOSED) openWebsocket()
-      return
-   }
-
-   //console.log(`data ${typeof data} len = ${data.length} ${JSON.stringify(data)}`)
-   const blob = new Blob(data, {type: "application/octet-stream"})
-   //console.log(`blob.size=${blob.size}`)
-   blob.arrayBuffer()
-      .then(buffer=>{
-         websocket.send(buffer)
-      })
-
-   //const buffer = new ArrayBuffer(data.length)
-   //websocket.send(buffer)
-}
-
 //setInterval(() => {console.log(`state=${WEBSOCKET_STATES[websocket.readyState]}`)}, 1000)
-/*setInterval(() => {
-   if (websocket.readyState !== websocket.OPEN) {
-      console.warn(`Couldn't send: state=${WEBSOCKET_STATES[websocket.readyState]}`)
-      return
-   }
-   const buffer = new ArrayBuffer(8)
-   const view = new Float32Array(buffer)
-   view[0] = Date.now() - dateStart
-   view[1] = 129
-   websocket.send(buffer)
-   console.log(`bin=${websocket.binaryType}`);
-}, 2000)*/
-
 //setInterval(() => {if (websocket.readyState === websocket.CLOSED) openWebsocket()}, 5000)
 
-//websocket.send('hello.')
 function onOpen(evt) {
-   console.log("CONNECTED")
+   console.log("websocket opened")
 }
 
 function onClose() {
-   console.warn("websocket disconnected")
+   console.warn("websocket closed")
 }
 
 function onMessage(evt) {
    const view = new Float32Array(evt.data)
-   //console.log(`websocket rx: ${view[0]}`)
+   //console.log(`websocket received: ${view[0]}`)
    // We could use messaging to send data to watch.
 }
 
 function onError() {
    console.error(`websocket error`)
 }
-
-// TODO 3.2 companion: if messaging peerSocket closes or errors, try to reopen it. Try import()
-// TODO 3.5 companion: track bufferedAmount
