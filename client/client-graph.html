@@ -1,0 +1,56 @@
+<!-- Developed by Barbara Kälin. -->
+<!DOCTYPE html>
+<head>
+  <link href="client-graph.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+	<h1>Simulated Live-Stream Data</h1>
+	<p>(Click any line for info on closest dataPoint)</p>
+
+	<!--
+	<div id = "settingsContainer">
+
+	<label for="maxDataPoints">Max Data Points:</label>
+	<input type="number" id="maxDataPoints" value="50"><br>
+
+	<label for="updateInterval">Update Interval (ms):</label>
+	<input type="number" id="updateInterval" value="33"><br>
+
+	<label for="yFactor">Y Scaling Factor:</label>
+	<input type="number" id="yFactor" value="8"><br>
+	</div>
+	-->
+
+	<!--
+	<button id="scaleButton">Scale x-Axis</button>
+	-->
+	<div id="inputContainer">
+		<label for="scalingFactorInput">Scale x-Axis</label><br>
+		<input id="scalingFactorInput" type="range" step="0.1" min="1" max="10" value="1" />
+		<br><br>
+
+		<label for="yFactor">Scale y-Axis</label><br>
+		<input id="yFactor" type="range" step="0.1" min="1" max="4" value="1" />
+		<!--<button id="reset">Reset</button>-->
+	</div>
+	<button id="toggleButton">Stop Scrolling</button>
+
+	<div class="container shadow">
+		<svg id="outerSvg" x="0" y="0" width="100%" height="100%">
+			<!--testing dimensions - Not covering all container (bottom)-->
+			<!--<rect x="0" y="0" width="100%" height="100%" fill="limegreen" ></rect>-->
+			<svg id="innerSvg" x="0" y="0" width="100%" height="100%">
+				<!--testing dimensions - Covering all outerSvg-->
+				<!--<rect x="0" y="0" width="100%" height="100%" fill="pink"></rect>-->
+				<g id="group">
+					<rect class="chartBackground" x="0" y="-50%" width="100%" height="100%"></rect>
+					<line x1="0" y1="0" x2="100%" y2="0" stroke="black" stroke-width=".5"></line>
+					<line id="marker" x1="0" y1="-50%" x2="0" y2="100%" stroke="black" stroke-width="1"></line>
+				</g>
+			</svg>
+		</svg>
+	</div>
+
+	<script src="client-stream.js"></script>  <!-- provides a stream Object for WebSocket communications -->
+	<script src="client-graph.js" ></script>  <!-- uses data from the stream Object to update the displayed image -->
+</body>
