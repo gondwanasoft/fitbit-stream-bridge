@@ -1,11 +1,11 @@
-# fitbit-stream-bridge
+# Fitbit Stream Bridge
 A demonstration of sending real-time data between Fitbit OS and a LAN client.
 
 ![Preview](https://raw.githubusercontent.com/gondwanasoft/fitbit-stream-bridge/main/stream-bridge.mp4 "Preview")
 
 A phone-based server is used to relay the data. This avoids the need to use `wss` (`https`), which can be difficult to set up on a LAN.
 
-This demonstration streams accelerometer data, which is probably the most demanding use case. The same architecture should be fine for streaming heart rate, step count, etc.
+This demonstration streams accelerometer data, which is probably the most demanding use case. The same architecture should be fine for streaming heart rate, step count, *etc*.
 ## Architecture
 This project consists of three main components:
 * `fitbit`. This is a Fitbit OS app comprising a device (watch) component and a companion (phone) component. Accelerometer data is passed from the device to the companion using messaging. The companion then acts as a websocket client and forwards each message to the `server` component.
@@ -18,12 +18,12 @@ Bidirectional communication is supported, so `client` can send messages to `fitb
 ### Installation and Configuration
 #### Fitbit
 * Download or clone the `fitbit` app’s files.
-* In `companion/index.js`, Verify that `SERVER_URL` is appropriate to your phone. (The default should be fine on Android.)
+* In `companion/index.js`, verify that `SERVER_URL` is appropriate to your phone. (The default should be fine on Android.)
 * To generate artificial accelerometer data (*eg*, for use in Fitbit Simulator), set `FAKE_ACCEL` to `true`.
 * Build the app (named `Stream Bridge`) using the Fitbit development CLI.
 * Install the app onto a watch (see *Issues* below for use with the Fitbit Simulator).
 #### Server
-Install [pydroid 3](https://play.google.com/store/apps/details?id=ru.iiec.pydroid3) or some other Python 3.5+ execution environment. For iOS, [Pythonista 3](http://omz-software.com/pythonista/index.html) might work (untested).
+Install a Python 3.5+ execution environment on the phone on which the Fitbit companion component (*ie*, Fitbit mobile app) will run. For Android, you can use [pydroid 3](https://play.google.com/store/apps/details?id=ru.iiec.pydroid3). For iOS, [Pythonista 3](http://omz-software.com/pythonista/index.html) might work (untested).
 
 In Python, install the `websockets` package; *eg*, `pip install websockets`.
 
@@ -32,6 +32,8 @@ In `stream-bridge.py`, set constants appropriate to your network:
 * `SERVER_LOCAL_PORT` should match the port specified in `companion/index.js`’s `SERVER_URL`.
 * `SERVER_LAN_HOST` should be same IP specified in `client-stream.js`’s `SERVER_URL`.
 * `SERVER_LAN_PORT` should be same port specified in `client-stream.js`’s `SERVER_URL`.
+
+Copy `server/stream-bridge.py` to a directory on your phone from which Python can run it.
 
 #### Client
 
